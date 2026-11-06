@@ -1,0 +1,41 @@
+name: Build WhatsApp Spider exe
+
+on:
+  push:
+    paths:
+      - "whatsapp-spider/*.py"
+      - ".github/workflows/build-whatsapp-spider.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build
+        working-directory: whatsapp-spider
+        run: |
+          python -m pip install pyinstaller==6.11.1
+          pyinstaller --onefile --windowed --name "WhatsApp-Spider" spider_app.py
+          New-Item -ItemType Directory -Force -Path dist-exe | Out-Null
+          Copy-Item dist/WhatsApp-Spider.exe dist-exe/WhatsApp-Spider.exe
+          ./dist-exe/WhatsApp-Spider.exe --auto
+          Get-Content spider.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: WhatsApp-Spider
+          path: whatsapp-spider/dist-exe/WhatsApp-Spider.exe
+      - name: Commit exe back to branch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f whatsapp-spider/dist-exe/WhatsApp-Spider.exe
+          git commit -m "Build WhatsApp-Spider.exe [skip ci]" || exit 0
+          git push

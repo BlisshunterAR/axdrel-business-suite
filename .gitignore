@@ -1,0 +1,8 @@
+whatsapp-spider/build/
+whatsapp-spider/dist/
+whatsapp-spider/*.spec
+whatsapp-spider/config.json
+whatsapp-spider/spider.log
+whatsapp-spider/Reports/
+whatsapp-spider/Exported chats/
+__pycache__/
