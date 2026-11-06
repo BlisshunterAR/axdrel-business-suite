@@ -25,8 +25,8 @@ jobs:
           pyinstaller --onefile --windowed --name "WhatsApp-Spider" spider_app.py
           New-Item -ItemType Directory -Force -Path dist-exe | Out-Null
           Copy-Item dist/WhatsApp-Spider.exe dist-exe/WhatsApp-Spider.exe
-          ./dist-exe/WhatsApp-Spider.exe --auto
-          Get-Content spider.log
+          Start-Process -FilePath ./dist-exe/WhatsApp-Spider.exe -ArgumentList "--auto" -Wait
+          Get-Content dist-exe/spider.log
       - uses: actions/upload-artifact@v4
         with:
           name: WhatsApp-Spider
